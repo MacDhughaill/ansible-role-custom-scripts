@@ -1,3 +1,3 @@
 ---
-custom_scripts_for_bin: "{{ playbook_dir}}/files/{{ inventory_hostname }}/scripts/bin/*.sh"
-custom_scripts_for_sbin: "{{ playbook_dir}}/files/{{ inventory_hostname }}/scripts/sbin/*.sh"
+#custom_scripts_for_bin:
+#custom_scripts_for_sbin:
