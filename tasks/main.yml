@@ -6,6 +6,7 @@
       dest: "/usr/local/bin/{{ (item | basename | splitext)[0] }}"
       mode: ugo+x
     with_fileglob: "{{ custom_scripts_for_bin }}"
+    when: custom_scripts_for_bin is defined
 
   - name: Copy script templates for elevated users
     template:
@@ -13,4 +14,5 @@
       dest: "/usr/local/sbin/{{ (item | basename | splitext)[0] }}"
       mode: ugo+x
     with_fileglob: "{{ custom_scripts_for_sbin }}"
+    when: custom_scripts_for_sbin is defined
   become: true
