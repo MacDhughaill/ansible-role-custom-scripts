@@ -1,13 +1,18 @@
 ---
-- name: Copy script templates
-  template:
-    src: "{{ item[1] }}"
-    dest: "{{ custom_scripts[0].dest }}/{{ (item[1] | basename | regex_replace('(.*)\\.j2', '\\1')| splitext)[0] }}"
-    owner: "{{ custom_scripts[0].owner | default(omit) }}"
-    group: "{{ custom_scripts[0].group | default(omit) }}"
-    mode: "{{ custom_scripts[0].mode | default('u+x') }}"
-    backup: "{{ custom_scripts[0].backup | default('false')}}"
-  with_subelements:
-    - "{{ custom_scripts }}"
-    - src
+- block:
+  - name: Copy script templates for all users
+    template:
+      src: "{{ item }}"
+      dest: "/usr/local/bin/{{ (item | basename | splitext)[0] }}"
+      mode: ugo+x
+    with_fileglob: "{{ custom_scripts_for_bin }}"
+    when: custom_scripts_for_bin is defined
+
+  - name: Copy script templates for elevated users
+    template:
+      src: "{{ item }}"
+      dest: "/usr/local/sbin/{{ (item | basename | splitext)[0] }}"
+      mode: ugo+x
+    with_fileglob: "{{ custom_scripts_for_sbin }}"
+    when: custom_scripts_for_sbin is defined
   become: true
