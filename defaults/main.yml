@@ -1,3 +1,5 @@
 ---
-#custom_scripts_for_bin:
+#custom_scripts:
+#custom_scripts_dir:
+#custom_scripts_mode:
 #custom_scripts_for_sbin:
