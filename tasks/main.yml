@@ -5,7 +5,8 @@
     state: directory
 
 # If "{{ ansible_user_dir }}/.local" was created by the previous task, it will not receive the correct file permissions.
-- file: Correct file permissions in rare cases
+- name: Correct file permissions in rare case
+  file:
     path: "{{ ansible_user_dir }}/.local"
     mode: 0700
 
