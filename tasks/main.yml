@@ -1,17 +1,17 @@
 ---
-- name: Copy script templates
-  template:
-    src: "{{ item }}"
-    dest: "{{ custom_scripts_dir | default(ansible_user_dir + '/bin')}}/{{ (item | basename | regex_replace('(.*)\\.j2', '\\1')| splitext)[0] }}"
-    mode: "{{ custom_scripts_mode | default('u+x') }}"
-  with_items: "{{ custom_scripts }}"
-  when: custom_scripts is defined
+- name: Create directory for custom scripts
+  file:
+    path: "{{ custom_scripts_dir }}"
+    state: directory
 
-- name: Copy script templates for elevated users
+# If "{{ ansible_user_dir }}/.local" was created by the previous task, it will not receive the correct file permissions.
+- file: Correct file permissions in rare cases
+    path: "{{ ansible_user_dir }}/.local"
+    mode: 0700
+
+- name: Copy custom script templates
   template:
     src: "{{ item }}"
-    dest: "/usr/local/sbin/{{ (item | basename | regex_replace('(.*)\\.j2', '\\1')| splitext)[0] }}"
-    mode: ugo+x
-  with_items: "{{ custom_scripts_for_sbin }}"
-  when: custom_scripts_for_sbin is defined
-  become: true
+    dest: "{{ custom_scripts_dir }}/{{ (item | basename | regex_replace('(.*)\\.j2', '\\1')| splitext)[0] }}"
+    mode: u+x
+  with_items: "{{ custom_scripts }}"
